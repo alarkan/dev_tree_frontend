@@ -1,22 +1,20 @@
-import { DevTreeLink } from "../types"
+import { DevTreeTask } from "../types"
 import { Switch } from '@headlessui/react'
 import { classNames } from "../utils"
 
 type DevTreeInputProps = {
-    item: DevTreeLink
-    handleUrlChange: (e : React.ChangeEvent<HTMLInputElement>) => void
-    handleEnableLink: (socialNetWork: string) => void
+    item: DevTreeTask
+    handleDescriptionTask: (e : React.ChangeEvent<HTMLInputElement>) => void
+    handleEnableTask: (Task: string) => void
 }
 
-const DevTreeInput = ({ item, handleUrlChange, handleEnableLink}: DevTreeInputProps) => {
+const DevTreeInput = ({ item, handleDescriptionTask, handleEnableTask}: DevTreeInputProps) => {
     return (
         <div className="bg-white shaddow-sm flex items-center gap-3">
-            <div className="w-12 h-12 bg-cover" style={{ backgroundImage: `url('/social/icon_${item.name}.svg')` }}>
-            </div>
-            <input className="flex-1 border border-gray-100 rounded-lg" value={item.url} onChange={handleUrlChange} name={item.name}/>
+            <input className="flex-1 border border-gray-100 rounded-lg" value={item.task_description} onChange={handleDescriptionTask} name={item.name}/>
             <Switch
                 checked={item.enabled}
-                onChange={() => handleEnableLink(item.name)}
+                onChange={() => handleEnableTask(item.name)}
                 className={classNames(
                     item.enabled ? 'bg-blue-500' : 'bg-gray-200',
                     'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'

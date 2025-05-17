@@ -1,11 +1,11 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 import NavigationTabs from "../components/NavigationTabs";
-import { User, SocialNetwork } from "../types";
-import DevTreeLink from "./DevTreeLink";
+import { User, Task } from "../types";
+import DevTreeTask from "./DevTreeTask";
 import { useQueryClient } from "@tanstack/react-query";
 
 type DevTreeProps = {
@@ -14,28 +14,34 @@ type DevTreeProps = {
 
 const DevTree = ({ data }: DevTreeProps) => {
     const queryClient = useQueryClient()
-    const [enabledLinks, setEnabledLinks] = useState<SocialNetwork[]>(JSON.parse(data.links).filter((item: SocialNetwork) => item.enabled))
+    const navigate = useNavigate()
+    const [enabledTasks, setEnabledTasks] = useState<Task[]>(JSON.parse(data.tasks).filter((item: Task) => item.enabled))
 
     const handleDragEnd = (e: DragEndEvent) => {
         const { active, over } = e
         if (over && over.id) {
-            const prevIndex = enabledLinks.findIndex((link: SocialNetwork) => link.id === active.id)
-            const newIndex = enabledLinks.findIndex((link: SocialNetwork) => link.id === over.id)
-            const order = arrayMove(enabledLinks, prevIndex, newIndex)
-            setEnabledLinks(order)
-            const disabledLinks = JSON.parse(data.links).filter((item: SocialNetwork) => !item.enabled)
-            const links = [...order, ...disabledLinks]
+            const prevIndex = enabledTasks.findIndex((task: Task) => task.id === active.id)
+            const newIndex = enabledTasks.findIndex((task: Task) => task.id === over.id)
+            const order = arrayMove(enabledTasks, prevIndex, newIndex)
+            setEnabledTasks(order)
+            const disabledTasks = JSON.parse(data.tasks).filter((item: Task) => !item.enabled)
+            const tasks = [...order, ...disabledTasks]
             queryClient.setQueryData(['user'], (prevData: User) => {
                 return {
                     ...prevData,
-                    links: JSON.stringify(links)
+                    tasks: JSON.stringify(tasks)
                 }
             })
         }
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('AUTH_TOKEN');
+        navigate('/auth/login');
+    };
+
     useEffect(() => {
-        setEnabledLinks(JSON.parse(data.links).filter((item: SocialNetwork) => item.enabled))
+        setEnabledTasks(JSON.parse(data.tasks).filter((item: Task) => item.enabled))
     }, [data])
     return (
         <>
@@ -47,7 +53,7 @@ const DevTree = ({ data }: DevTreeProps) => {
                     <div className="md:w-1/3 md:flex md:justify-end">
                         <button
                             className=" bg-lime-500 p-2 text-slate-800 uppercase font-black text-xs rounded-lg cursor-pointer"
-                            onClick={() => { }}
+                            onClick={() => handleLogout()}
                         >
                             Cerrar Sesión
                         </button>
@@ -77,9 +83,9 @@ const DevTree = ({ data }: DevTreeProps) => {
                             <p className="text-center text-lg font-black text-white">{data.description}</p>
                             <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                                 <div className="mt-20 flex flex-col gap-5">
-                                    <SortableContext items={enabledLinks} strategy={verticalListSortingStrategy}>
-                                        {enabledLinks.map(link => (
-                                            <DevTreeLink key={link.name} link={link} />
+                                    <SortableContext items={enabledTasks} strategy={verticalListSortingStrategy}>
+                                        {enabledTasks.map(task => (
+                                            <DevTreeTask key={task.name} task={task} />
                                         ))}
                                     </SortableContext>
                                 </div>

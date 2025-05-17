@@ -3,7 +3,7 @@ import LoginView from './views/LoginView'
 import RegisterView from './views/RegisterView'
 import AuthLayout from './layout/AuthLayout'
 import AppLayout from './layout/AppLayout'
-import LinkTree from './views/LinkTreeView'
+import TaskTree from './views/TaskTreeView'
 import ProfileView from './views/ProfileView'
 import HandleView from './views/HandleView'
 import NotFoundView from './views/NotFoundView'
@@ -18,7 +18,7 @@ export default function Router() {
                     <Route path="/auth/register" element={<RegisterView />} />
                 </Route>
                 <Route path='/admin' element={<AppLayout />}>
-                    <Route index={true} element={<LinkTree />} />
+                    <Route index={true} element={<TaskTree />} />
                     <Route path='profile' element={<ProfileView />} />
                 </Route>
                 <Route path='/:handle' element={<AuthLayout />}>

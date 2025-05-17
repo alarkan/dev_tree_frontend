@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 
 const tabs = [
-    { name: 'Links', href: '/admin', icon: BookmarkSquareIcon },
+    { name: 'Tareas', href: '/admin', icon: BookmarkSquareIcon },
     { name: 'Mi Perfil', href: '/admin/profile', icon: UserIcon },
 ]
 
@@ -29,17 +29,16 @@ export default function NavigationTabs() {
                     id="tabs"
                     name="tabs"
                     className="block w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    onChange={ (e)=>handleChange(e) }
+                    onChange={(e) => handleChange(e)}
                 >
                     {tabs.map((tab) => (
-                        <option 
+                        <option
                             value={tab.href}
                             key={tab.name}
                         >{tab.name}</option>
                     ))}
                 </select>
             </div>
-
             <div className="hidden sm:block">
                 <div className="border-b border-gray-200">
                     <nav className="-mb-px flex space-x-8" aria-label="Tabs">
